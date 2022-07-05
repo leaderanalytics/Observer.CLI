@@ -8,7 +8,7 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-	  <Content Include="..\..\..\Users\sam\OneDrive\LeaderAnalytics\Config\Vyntix.Fred.FredClient\appsettings.json" Link="appsettings.json">
+	  <Content Include="..\..\..\Users\sam\OneDrive\LeaderAnalytics\Config\Vyntix.Fred.FredClient\appsettings.development.json" Link="appsettings.development.json">
 	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
 	  </Content>
 	</ItemGroup>
@@ -31,10 +31,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <None Update="appsettings.production.json">
-	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-	  </None>
-	  <None Update="appsettings.development.json">
+	  <None Update="appsettings.json">
 	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
 	  </None>
 	</ItemGroup>

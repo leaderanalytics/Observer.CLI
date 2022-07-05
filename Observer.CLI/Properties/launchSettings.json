@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "Observer.CLI - Development": {
+      "commandName": "Project",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "development"
+      }
+    }
+  }
+}

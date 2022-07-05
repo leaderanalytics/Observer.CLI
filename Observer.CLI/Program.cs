@@ -6,7 +6,7 @@ public class Program
 {
     public static async Task Main(string[] args)
     {
-        string env = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") ?? "production";
+        string? env = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
         string logRoot = "logs";
 
         Log.Logger = new LoggerConfiguration()
@@ -48,8 +48,8 @@ public class Program
         Host.CreateDefaultBuilder(args)
         .ConfigureDefaults(args)
         .ConfigureHostConfiguration(builder => {
-            builder.AddJsonFile($"appsettings.{env}.json", false);  // Endpoints
-            builder.AddJsonFile($"appsettings.json", false);        // Fred API key
+            string fileName = string.IsNullOrEmpty(env) ? "appsettings.json" : $"appsettings.{env}.json";
+            builder.AddJsonFile(fileName, false);  
         })
         .UseServiceProviderFactory(new AutofacServiceProviderFactory())
         .UseSerilog()
