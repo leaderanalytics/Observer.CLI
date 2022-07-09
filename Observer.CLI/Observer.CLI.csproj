@@ -8,7 +8,7 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-	  <Content Include="..\..\..\Users\sam\OneDrive\LeaderAnalytics\Config\Vyntix.Fred.FredClient\appsettings.development.json" Link="appsettings.development.json">
+	  <Content Include="O:\LeaderAnalytics\Config\Vyntix.Fred.FredClient\appsettings.development.json" Link="appsettings.development.json">
 	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
 	  </Content>
 	</ItemGroup>

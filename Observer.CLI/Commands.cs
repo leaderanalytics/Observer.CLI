@@ -1,4 +1,5 @@
 ﻿namespace Observer.CLI;
+
 internal static class CommandArgument
 {
     internal const string Help = "--help";
@@ -13,4 +14,5 @@ internal static class DataProvider
     internal const string Fred = "fred";
 }
 
-internal static class Fred
+internal static class FredDataType { }
+internal static class FredDataArg { }
