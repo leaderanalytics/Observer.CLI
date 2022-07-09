@@ -14,15 +14,18 @@ public class Program
             .Enrich.FromLogContext()
             .WriteTo.Console()
             .WriteTo.File(logRoot, rollingInterval: RollingInterval.Day, restrictedToMinimumLevel: Serilog.Events.LogEventLevel.Information, buffered: false)
-            .CreateLogger();
+            .CreateLogger(); 
 
         try
         {
+            Console.Clear();
             Log.Information("Observer - Program.Main started.");
-            Log.Information("Environment is: {env}", env);
+            Log.Information("Environment is: {env}", env ?? "Production");
             Log.Information("Log files will be written to {logRoot}", logRoot);
+            Log.Information("Documentation for Observer can be found at https://vyntix.com/docs/");
             IHost host = CreateHostBuilder(args, env).Build();
-            
+            string[] cmd = CommandParser.Parse(args);
+
             using (ILifetimeScope scope = host.Services.GetAutofacRoot().BeginLifetimeScope())
             {
                 string fredAPI_Key = scope.Resolve<IConfiguration>().GetValue<string>("FredAPI_Key");
