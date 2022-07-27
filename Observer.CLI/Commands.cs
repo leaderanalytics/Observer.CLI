@@ -1,18 +1,46 @@
-﻿namespace Observer.CLI;
+﻿namespace LeaderAnalytics.Observer.CLI;
 
-internal static class CommandArgument
+public static class CommandArgument
 {
-    internal const string Help = "--help";
-    internal const string Export = "--export";
-    internal const string Config = "--config";
-    internal const string Show = "--show";
-    internal const string UpdateDB = "--updatedb";
+    public const string Help = "--help";
+    public const string Export = "--export";
+    public const string Config = "--config";
+    public const string Show = "--show";
+    public const string UpdateDB = "--updatedb";
+    public const int MaxCommandArgs = 4; 
 }
 
-internal static class DataProvider
+public static class DataProvider
 {
-    internal const string Fred = "fred";
+    public const string Fred = "fred";
 }
 
-internal static class FredDataType { }
-internal static class FredDataArg { }
+
+public static class FredDataType 
+{
+    public const string Category = "category";
+    public const string Releases = "releases";
+    public const string Release = "release";
+    public const string Series = "series";
+    public const string Sources = "sources";
+    public const string Source = "source";
+    public const string Tags = "tags";
+    public const string RelatedTags = "related_tags";
+}
+
+public static class FredDataArg 
+{
+    public const string Children = "children";
+    public const string Related = "related";
+    public const string Series = "series";
+    public const string Tags = "tags";
+    public const string RelatedTags = "related_tags";
+    public const string Dates = "dates";
+    public const string Sources = "sources";
+    public const string Tables = "tables";
+    public const string Categories = "categories";
+    public const string Observations = "observations";
+    public const string Release = "release";
+    public const string VintageDates = "vintagedates";
+    public const string Releases = "releases";
+}

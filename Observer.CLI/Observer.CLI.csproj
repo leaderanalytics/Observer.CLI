@@ -13,6 +13,7 @@
 	  </Content>
 	</ItemGroup>
 
+
 	<ItemGroup>
 		<PackageReference Include="AdaptiveClient" Version="3.0.3" />
 		<PackageReference Include="Autofac" Version="6.3.0" />
@@ -25,6 +26,12 @@
 		<PackageReference Include="Serilog.AspNetCore" Version="5.0.0" />
 		<PackageReference Include="Serilog.Sinks.File" Version="5.0.0" />
 	</ItemGroup>
+
+	<PropertyGroup>
+		<RootNamespace>LeaderAnalytics.Observer.CLI</RootNamespace>
+		<AssemblyName>Obs</AssemblyName>
+	</PropertyGroup>
+
 
 	<ItemGroup>
 	  <ProjectReference Include="..\..\Observer.Fred.Services\Observer.Fred.Services\Observer.Fred.Services.csproj" />

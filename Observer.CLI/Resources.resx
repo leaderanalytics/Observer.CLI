@@ -117,8 +117,10 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="String1" xml:space="preserve">
-    <value>dasfsdf</value>
+  <data name="CommandError" xml:space="preserve">
+    <value>
+		{0} is not a recognized command.  The first argument provided to Observer must be the name of a data provider, --config, or --help.
+	</value>
   </data>
   <data name="String2" xml:space="preserve">
     <value>ddsdsd sdfsdf</value>

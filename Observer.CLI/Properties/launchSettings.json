@@ -2,6 +2,7 @@
   "profiles": {
     "Observer.CLI - Development": {
       "commandName": "Project",
+      "commandLineArgs": "fred categories children 125",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "development"
       }

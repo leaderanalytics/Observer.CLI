@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Observer.CLI {
+namespace LeaderAnalytics.Observer.CLI {
     using System;
     
     
@@ -39,7 +39,7 @@ namespace Observer.CLI {
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Observer.CLI.Resources", typeof(Resources).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("LeaderAnalytics.Observer.CLI.Resources", typeof(Resources).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -61,11 +61,13 @@ namespace Observer.CLI {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to dasfsdf.
+        ///   Looks up a localized string similar to 
+        ///		{0} is not a recognized command.  The first argument provided to Observer must be the name of a data provider, --config, or --help.
+        ///	.
         /// </summary>
-        internal static string String1 {
+        internal static string CommandError {
             get {
-                return ResourceManager.GetString("String1", resourceCulture);
+                return ResourceManager.GetString("CommandError", resourceCulture);
             }
         }
         

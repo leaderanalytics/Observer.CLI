@@ -1,6 +1,7 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using LeaderAnalytics.Vyntix.Fred.FredClient;
+using Microsoft.Extensions.Configuration;
 
-namespace Observer.CLI;
+namespace LeaderAnalytics.Observer.CLI;
 
 public class Program
 {
@@ -24,12 +25,14 @@ public class Program
             Log.Information("Log files will be written to {logRoot}", logRoot);
             Log.Information("Documentation for Observer can be found at https://vyntix.com/docs/");
             IHost host = CreateHostBuilder(args, env).Build();
-            string[] cmd = CommandParser.Parse(args);
-
+            
+            
             using (ILifetimeScope scope = host.Services.GetAutofacRoot().BeginLifetimeScope())
             {
+                CommandParser parser = scope.Resolve<CommandParser>();
+                await parser.Parse(args);
                 string fredAPI_Key = scope.Resolve<IConfiguration>().GetValue<string>("FredAPI_Key");
-                IAdaptiveClient <IAPI_Manifest> apiClient = scope.Resolve<IAdaptiveClient<IAPI_Manifest>>();
+                IAdaptiveClient<IObserverAPI_Manifest> apiClient = scope.Resolve<IAdaptiveClient<IObserverAPI_Manifest>>();
                 var stuff = await apiClient.CallAsync(x => x.ObservationsService.GetLocalObservations("NROU"));
             }
         }
@@ -49,17 +52,26 @@ public class Program
 
     public static IHostBuilder CreateHostBuilder(string[] args, string env) =>
         Host.CreateDefaultBuilder(args)
-        .ConfigureDefaults(args)
+        //.ConfigureDefaults(args)
         .ConfigureHostConfiguration(builder => {
             string fileName = string.IsNullOrEmpty(env) ? "appsettings.json" : $"appsettings.{env}.json";
-            builder.AddJsonFile(fileName, false);  
+            builder.AddJsonFile(fileName, false);
         })
         .UseServiceProviderFactory(new AutofacServiceProviderFactory())
         .UseSerilog()
+        .ConfigureServices((config, services) => 
+        {
+            string apiKey = config.Configuration.GetValue<string>("FredAPI_Key");
+            services.AddFredClient()
+            .UseAPIKey(apiKey)
+            .UseConfig(x => new FredClientConfig { MaxDownloadRetries = 1 });
+        })
         .ConfigureContainer<ContainerBuilder>((config, containerBuilder) =>
         {
             containerBuilder.RegisterInstance<IConfiguration>(config.Configuration).SingleInstance();
+            containerBuilder.RegisterType<CommandParser>().SingleInstance();
             IEnumerable<IEndPointConfiguration> endPoints = config.Configuration.GetSection("EndPoints").Get<IEnumerable<EndPointConfiguration>>();
+            
             containerBuilder.RegisterModule(new LeaderAnalytics.Observer.Fred.Services.AutofacModule());
             RegistrationHelper registrationHelper = new RegistrationHelper(containerBuilder);
             new AdaptiveClientModule(endPoints).Register(registrationHelper);
