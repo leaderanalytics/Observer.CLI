@@ -38,10 +38,7 @@ public class Program
         }
         catch (Exception ex)
         {
-            if (ex is ObserverException)
-                Log.Error(ex.Message);
-            else
-                Log.Error(ex.ToString());
+            Log.Error(ex.ToString());
         }
         finally
         {
@@ -52,7 +49,6 @@ public class Program
 
     public static IHostBuilder CreateHostBuilder(string[] args, string env) =>
         Host.CreateDefaultBuilder(args)
-        //.ConfigureDefaults(args)
         .ConfigureHostConfiguration(builder => {
             string fileName = string.IsNullOrEmpty(env) ? "appsettings.json" : $"appsettings.{env}.json";
             builder.AddJsonFile(fileName, false);

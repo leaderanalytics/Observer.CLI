@@ -19,13 +19,11 @@ public static class DataProvider
 public static class FredDataType 
 {
     public const string Category = "category";
-    public const string Releases = "releases";
     public const string Release = "release";
     public const string Series = "series";
     public const string Sources = "sources";
     public const string Source = "source";
     public const string Tags = "tags";
-    public const string RelatedTags = "related_tags";
 }
 
 public static class FredDataArg 
@@ -34,7 +32,6 @@ public static class FredDataArg
     public const string Related = "related";
     public const string Series = "series";
     public const string Tags = "tags";
-    public const string RelatedTags = "related_tags";
     public const string Dates = "dates";
     public const string Sources = "sources";
     public const string Tables = "tables";

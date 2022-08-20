@@ -27,7 +27,7 @@ public class CommandParser
     private async Task ParseCommand(string[] args)
     {
         if (!Regex.IsMatch(args[0], pattern0))
-            throw new ObserverException(Resources.CommandError.Replace("{0}", args[0]));
+            throw new Exception(Resources.CommandError.Replace("{0}", args[0]));
         
         string cmd = args[0].ToLower();
 
@@ -43,23 +43,17 @@ public class CommandParser
             case FredDataType.Category:
                 await GetCategories(args);
                 break;
-            case FredDataType.Releases:
-                GetReleases(args);
-                break;
             case FredDataType.Release:
-                GetRelease(args);
+                await GetReleases(args);
                 break;
             case FredDataType.Series:
-                GetSeries(args);
+                await GetSeries(args);
                 break;
             case FredDataType.Sources:
-                GetSources(args);
+                await GetSources(args);
                 break;
             case FredDataType.Tags:
-                GetTags(args);
-                break;
-            case FredDataType.RelatedTags:
-                GetRelatedTags(args);
+                await GetTags(args);
                 break;
             default:
                 ShowFredHelp();
@@ -69,29 +63,85 @@ public class CommandParser
 
     private async Task GetCategories(string[] args)
     {
-        // Get the id argument - if arg[4] contains the name of a fred argument, use arg[5] other use arg[4] as the id.
-        string? id = new string[] { FredDataArg.Children, FredDataArg.Related, FredDataArg.Series, FredDataArg.Tags, FredDataArg.RelatedTags }.Contains(args.Try(2)) ? args.Try(3) : args.Try(2);
+        bool getCategory = ! new string[] { FredDataArg.Children, FredDataArg.Related, FredDataArg.Series, FredDataArg.Tags }.Contains(args.Try(2));
+        
+        string? id = getCategory ?  args.Try(2) : args.Try(3) ;
 
         if (string.IsNullOrEmpty(id))
-            throw new ObserverException("Category ID is required.");
+            throw new Exception("Category ID is required.");
+        else if(args.Length > (getCategory ? 3 : 4))
+            throw new Exception("Too many arguments.");
 
-
-        switch (args[2].ToLower())
+        if (getCategory)
+            await client.CallAsync(x => x.CategoriesService.DownloadCategory(id));
+        else
         {
-            case FredDataArg.Children:
-                await client.CallAsync(x => x.CategoriesService.DownloadCategory(id));
-                break;
-                
+            switch (args[2].ToLower())
+            {
+                case FredDataArg.Children:
+                    await client.CallAsync(x => x.CategoriesService.DownloadCategoryChildren(id));
+                    break;
+                case FredDataArg.Related:
+                    await client.CallAsync(x => x.CategoriesService.DownloadRelatedCategories(id));
+                    break;
+                case FredDataArg.Series:
+                    await client.CallAsync(x => x.SeriesService.DownloadSeriesCategoriesForCategory(id));
+                    break;
+                case FredDataArg.Tags:
+                    await client.CallAsync(x => x.CategoriesService.DownloadCategoryTags(id));
+                    break;
+                default:
+                    throw new Exception($"Argument {args[2]} is not recognized.");
+            }
         }
     }
 
-    public void GetReleases(string[] args) {  }
-    public void GetRelease(string[] args) {  }
-    public void GetSeries(string[] args) {  }
-    public void GetSources(string[] args) {  }
-    public void GetSource(string[] args) {  }
-    public void GetTags(string[] args) {  }
-    public void GetRelatedTags(string[] args) {  }
+    private async Task GetReleases(string[] args) 
+    {
+        bool idRequired = new string[] { FredDataArg.Dates, FredDataArg.Series, FredDataArg.Sources }.Contains(args.Try(2));
+        string? id = idRequired ? args.Try(3) : args.Try(2); // id can be null in which case we get all releases
+
+        if (args.Length > (idRequired ? 4 : 3))
+            throw new Exception("Too many arguments.");
+
+        if (! idRequired)
+        {
+            if (id is null)
+                await client.CallAsync(x => x.ReleasesService.DownloadAllReleases());
+            else
+                await client.CallAsync(x => x.ReleasesService.DownloadRelease(id));
+        }
+        else
+        { 
+            switch (args[2].ToLower())
+            {
+                case FredDataArg.Dates:
+                
+                    if(id is null)
+                        await client.CallAsync(x => x.ReleasesService.DownloadAllReleaseDates());
+                    else
+                        await client.CallAsync(x => x.ReleasesService.DownloadReleaseDates(id));
+                    
+                    break;
+                case FredDataArg.Series:
+                    await client.CallAsync(x => x.ReleasesService.DownloadReleaseSeries(id));
+                    break;
+                case FredDataArg.Sources:
+                    await client.CallAsync(x => x.ReleasesService.DownloadReleaseSources(id));
+                    break;
+                default:
+                    throw new Exception($"Argument {args[2]} is not recognized.");
+            }
+        }
+    }
+
+
+   
+    public async Task GetSeries(string[] args) {  }
+    public async Task GetSources(string[] args) {  }
+    public async Task GetSource(string[] args) {  }
+    public async Task GetTags(string[] args) {  }
+    
 
     public void ShowFredHelp()
     {
