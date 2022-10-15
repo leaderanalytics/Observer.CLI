@@ -58,9 +58,9 @@ public class Tests
     [Test]
     public async Task ReleasesExceptionTests()
     {
-        // empty ID
-        string[] args = new string[] { DataProvider.Fred, FredDataType.Release, "" };
-        Assert.ThrowsAsync<ArgumentNullException>(async () => await commandParser.Parse(args));
+        // empty ID for FredDataArg
+        string[] args = new string[] { DataProvider.Fred, FredDataType.Release, FredDataArg.Series };
+        Assert.ThrowsAsync<Exception>(async () => await commandParser.Parse(args));
 
         // too many arguments
         args = new string[] { DataProvider.Fred, FredDataType.Release, "", "extra" };
@@ -73,5 +73,60 @@ public class Tests
         // bad ID
         args = new string[] { DataProvider.Fred, FredDataType.Release, FredDataArg.Dates, "55555"};
         Assert.ThrowsAsync<Exception>(async () => await commandParser.Parse(args));
+    }
+
+    [Test]
+    public async Task SeriesTests()
+    {
+        string[] args = new string[] { DataProvider.Fred, FredDataType.Series, "GNPCA" };
+        await commandParser.Parse(args);
+
+        args = new string[] { DataProvider.Fred, FredDataType.Series, "GNPCA,NROU" };
+        await commandParser.Parse(args);
+
+        args = new string[] { DataProvider.Fred, FredDataType.Series, FredDataArg.Observations, "GNPCA,CPIAUCSL"};
+        await commandParser.Parse(args);
+
+        args = new string[] { DataProvider.Fred, FredDataType.Series, FredDataArg.Categories, "GNPCA" };
+        await commandParser.Parse(args);
+
+        args = new string[] { DataProvider.Fred, FredDataType.Series, FredDataArg.Release, "GNPCA" };
+        await commandParser.Parse(args);
+
+        args = new string[] { DataProvider.Fred, FredDataType.Series, FredDataArg.Tags, "GNPCA" };
+        await commandParser.Parse(args);
+    }
+
+    [Test]
+    public async Task SeriesExceptionTests()
+    {
+        // missing ID
+        string[] args = new string[] { DataProvider.Fred, FredDataType.Series };
+        Assert.ThrowsAsync<Exception>(async () => await commandParser.Parse(args));
+
+        // empty ID
+        args = new string[] { DataProvider.Fred, FredDataType.Series, " " };
+        Assert.ThrowsAsync<Exception>(async () => await commandParser.Parse(args));
+
+        // wrong arg
+        args = new string[] { DataProvider.Fred, FredDataType.Series, FredDataArg.Dates,  "GNPCA" };
+        Assert.ThrowsAsync<Exception>(async () => await commandParser.Parse(args));
+
+        // multiple id's with spaces.  When parsed from the command line the last symbol will be an extra arg because a space is included 
+        args = new string[] { DataProvider.Fred, FredDataType.Series, "GNPCA", "CPIAUSCL " };
+        Assert.ThrowsAsync<Exception>(async () => await commandParser.Parse(args));
+    }
+
+    [Test]
+    public async Task SourcesTests()
+    {
+        string[] args = new string[] { DataProvider.Fred, FredDataType.Source};
+        await commandParser.Parse(args);
+        
+        args = new string[] { DataProvider.Fred, FredDataType.Source, "1" };
+        await commandParser.Parse(args);
+
+        args = new string[] { DataProvider.Fred, FredDataType.Source, FredDataArg.Releases, "1" };
+        await commandParser.Parse(args);
     }
 }

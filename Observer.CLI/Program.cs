@@ -33,7 +33,6 @@ public class Program
                 await parser.Parse(args);
                 string fredAPI_Key = scope.Resolve<IConfiguration>().GetValue<string>("FredAPI_Key");
                 IAdaptiveClient<IObserverAPI_Manifest> apiClient = scope.Resolve<IAdaptiveClient<IObserverAPI_Manifest>>();
-                var stuff = await apiClient.CallAsync(x => x.ObservationsService.GetLocalObservations("NROU"));
             }
         }
         catch (Exception ex)
