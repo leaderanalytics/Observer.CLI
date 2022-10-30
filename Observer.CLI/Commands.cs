@@ -6,7 +6,6 @@ public static class CommandArgument
     public const string Export = "--export";
     public const string Config = "--config";
     public const string Show = "--show";
-    public const string UpdateDB = "--updatedb";
     public const string RealTimeStart = "--realtime_start";
     public const string RealTimeEnd = "--realtime_end";
     public const string TagNames = "--tag_names";
@@ -18,7 +17,6 @@ public static class DataProvider
 {
     public const string Fred = "fred";
 }
-
 
 public static class FredDataType 
 {
@@ -45,3 +43,8 @@ public static class FredDataArg
     public const string Releases = "releases";
 }
 
+public static class ConfigArgument
+{
+    public const string UpdateDB = "updatedb";
+    public const string VerifyDB = "verifydb";
+}

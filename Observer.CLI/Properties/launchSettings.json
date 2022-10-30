@@ -2,9 +2,16 @@
   "profiles": {
     "Observer.CLI - Development": {
       "commandName": "Project",
-      "commandLineArgs": "fred series GNPCA,CPIAUSCL",
+      "commandLineArgs": "fred series observations GNPCA,CPIAUSCL",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "development"
+      }
+    },
+    "Observer.CLI - Production": {
+      "commandName": "Project",
+      "commandLineArgs": "fred series GNPCA,CPIAUSCL",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": ""
       }
     }
   }

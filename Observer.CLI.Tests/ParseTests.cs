@@ -39,6 +39,9 @@ public class Tests
         string[] args = new string[] { DataProvider.Fred, FredDataType.Release, null };
         await commandParser.Parse(args);
 
+        args = new string[] { DataProvider.Fred, FredDataType.Release };
+        await commandParser.Parse(args);
+
         args = new string[] { DataProvider.Fred, FredDataType.Release, FredDataArg.Dates };
         await commandParser.Parse(args);
 
@@ -60,19 +63,19 @@ public class Tests
     {
         // empty ID for FredDataArg
         string[] args = new string[] { DataProvider.Fred, FredDataType.Release, FredDataArg.Series };
-        Assert.ThrowsAsync<Exception>(async () => await commandParser.Parse(args));
+        Assert.ThrowsAsync<ParseException>(async () => await commandParser.Parse(args));
 
         // too many arguments
         args = new string[] { DataProvider.Fred, FredDataType.Release, "", "extra" };
-        Assert.ThrowsAsync<Exception>(async () => await commandParser.Parse(args));
+        Assert.ThrowsAsync<ParseException>(async () => await commandParser.Parse(args));
 
         // too many arguments
         args = new string[] { DataProvider.Fred, FredDataType.Release, FredDataArg.Dates, "53", "extra" };
-        Assert.ThrowsAsync<Exception>(async () => await commandParser.Parse(args));
+        Assert.ThrowsAsync<ParseException>(async () => await commandParser.Parse(args));
         
         // bad ID
         args = new string[] { DataProvider.Fred, FredDataType.Release, FredDataArg.Dates, "55555"};
-        Assert.ThrowsAsync<Exception>(async () => await commandParser.Parse(args));
+        Assert.ThrowsAsync<Exception>(async () => await commandParser.Parse(args)); // Thrown by the service, not the parser
     }
 
     [Test]
@@ -102,19 +105,19 @@ public class Tests
     {
         // missing ID
         string[] args = new string[] { DataProvider.Fred, FredDataType.Series };
-        Assert.ThrowsAsync<Exception>(async () => await commandParser.Parse(args));
+        Assert.ThrowsAsync<ParseException>(async () => await commandParser.Parse(args));
 
         // empty ID
         args = new string[] { DataProvider.Fred, FredDataType.Series, " " };
-        Assert.ThrowsAsync<Exception>(async () => await commandParser.Parse(args));
+        Assert.ThrowsAsync<ParseException>(async () => await commandParser.Parse(args));
 
         // wrong arg
         args = new string[] { DataProvider.Fred, FredDataType.Series, FredDataArg.Dates,  "GNPCA" };
-        Assert.ThrowsAsync<Exception>(async () => await commandParser.Parse(args));
+        Assert.ThrowsAsync<ParseException>(async () => await commandParser.Parse(args));
 
         // multiple id's with spaces.  When parsed from the command line the last symbol will be an extra arg because a space is included 
         args = new string[] { DataProvider.Fred, FredDataType.Series, "GNPCA", "CPIAUSCL " };
-        Assert.ThrowsAsync<Exception>(async () => await commandParser.Parse(args));
+        Assert.ThrowsAsync<ParseException>(async () => await commandParser.Parse(args));
     }
 
     [Test]

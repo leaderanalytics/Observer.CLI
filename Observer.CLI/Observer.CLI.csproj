@@ -6,13 +6,13 @@
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
 	</PropertyGroup>
-
+	
 	<ItemGroup>
-	  <Content Include="O:\LeaderAnalytics\Config\Vyntix.Fred.FredClient\appsettings.development.json" Link="appsettings.development.json">
-	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-	  </Content>
+		<Content Include="O:\LeaderAnalytics\Config\Vyntix.Fred.FredClient\appsettings.development.json" Link="appsettings.development.json">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
 	</ItemGroup>
-
+	
 
 	<ItemGroup>
 		<PackageReference Include="AdaptiveClient" Version="3.0.3" />
@@ -24,6 +24,7 @@
 		</PackageReference>
 		<PackageReference Include="Serilog.AspNetCore" Version="6.0.1" />
 		<PackageReference Include="Serilog.Sinks.File" Version="5.0.0" />
+		<PackageReference Include="Spectre.Console" Version="0.45.0" />
 	</ItemGroup>
 
 	<PropertyGroup>
@@ -53,6 +54,9 @@
 
 	<ItemGroup>
 	  <None Update="appsettings.json">
+	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  </None>
+	  <None Update="help.txt">
 	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
 	  </None>
 	</ItemGroup>

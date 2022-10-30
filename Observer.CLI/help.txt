@@ -1,0 +1,23 @@
+﻿Documentation can be found at https://vyntix.com/docs/.
+The first argument provided to Observer must be the name of a data provider, --config, or --help.  
+Examples:
+obs <data provider name>
+obs --config
+obs --help
+
+The only data provider supported at this time is fred.  Fred supports the following arguments:
+
+obs fred [category] [release] [series] [source]
+
+Each argument supports optional arguments as shown:
+
+obs fred category [[children] | [related] | [series] | [tags]] <cateogryID>{,<categoryID>}
+
+obs fred release [[dates] | [series] | [sources] <releaseID>{,<releaseID>] [<releaseID>{,<releaseID>]
+
+obs fred series [[categories] | [release] | [tags] | [observations]] <seriesID>{,<seriesID>}
+
+obs fred source [[releases] <sourceID>{,<sourceID>}] [<sourceID>{,<sourceID>}]
+
+Vintage dates are always downloaded when observations are downloaded.  There is no API to download vintage dates independently. 
+Observations are updated using the last date stored in the local database.  
