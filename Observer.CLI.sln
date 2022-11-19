@@ -5,9 +5,7 @@ VisualStudioVersion = 17.2.32616.157
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Observer.CLI", "Observer.CLI\Observer.CLI.csproj", "{6FAB19BB-4C02-4DF9-AE01-9232E5E3A129}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Observer.Fred.Services", "..\Observer.Fred.Services\Observer.Fred.Services\Observer.Fred.Services.csproj", "{DA9DBBDD-147F-4A78-9A8E-00A70422399F}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Observer.CLI.Tests", "Observer.CLI.Tests\Observer.CLI.Tests.csproj", "{4AEE9A4A-33A7-4268-A31A-179123E067F6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Observer.CLI.Tests", "Observer.CLI.Tests\Observer.CLI.Tests.csproj", "{4AEE9A4A-33A7-4268-A31A-179123E067F6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -19,10 +17,6 @@ Global
 		{6FAB19BB-4C02-4DF9-AE01-9232E5E3A129}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6FAB19BB-4C02-4DF9-AE01-9232E5E3A129}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6FAB19BB-4C02-4DF9-AE01-9232E5E3A129}.Release|Any CPU.Build.0 = Release|Any CPU
-		{DA9DBBDD-147F-4A78-9A8E-00A70422399F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{DA9DBBDD-147F-4A78-9A8E-00A70422399F}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{DA9DBBDD-147F-4A78-9A8E-00A70422399F}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{DA9DBBDD-147F-4A78-9A8E-00A70422399F}.Release|Any CPU.Build.0 = Release|Any CPU
 		{4AEE9A4A-33A7-4268-A31A-179123E067F6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{4AEE9A4A-33A7-4268-A31A-179123E067F6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4AEE9A4A-33A7-4268-A31A-179123E067F6}.Release|Any CPU.ActiveCfg = Release|Any CPU

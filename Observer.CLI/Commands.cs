@@ -46,5 +46,4 @@ public static class FredDataArg
 public static class ConfigArgument
 {
     public const string UpdateDB = "updatedb";
-    public const string VerifyDB = "verifydb";
 }

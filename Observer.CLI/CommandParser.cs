@@ -1,6 +1,5 @@
 ﻿using LeaderAnalytics.AdaptiveClient.EntityFrameworkCore;
 using Serilog.Sinks.SystemConsole.Themes;
-using Spectre.Console;
 
 namespace LeaderAnalytics.Observer.CLI;
 
@@ -266,27 +265,21 @@ public class CommandParser
 
     private async Task ParseConfig(string[] args)
     {
-        if (string.IsNullOrEmpty(args[1]))
-        {
-            ShowConfig();
-            return;
-        }
-
+        Console.WriteLine($"Observer CLI version {Assembly.GetEntryAssembly().GetCustomAttribute<AssemblyInformationalVersionAttribute>().InformationalVersion}");
         DatabaseStatus status = await dbHelper.VerifyDatabase();
         Console.WriteLine(dbHelper.EndPoint.ConnectionString);
         
         if (status == DatabaseStatus.ConsistentWithModel)
             Console.WriteLine("The database is up to date.");
-
-        if (args.Try(1) == ConfigArgument.VerifyDB)
+        else
         {
-            if (status != DatabaseStatus.ConsistentWithModel)
-            {
-                Console.WriteLine($"Database status is: {status}");
+            Console.WriteLine($"Database status is: {status}");
+            
+            if (args.Try(1) != ConfigArgument.UpdateDB)
                 Console.WriteLine("Try running obs --config updatedb");
-            }
         }
-        else if (args.Try(1) == ConfigArgument.UpdateDB)
+        
+        if (args.Try(1) == ConfigArgument.UpdateDB)
         {
             if (status != DatabaseStatus.ConsistentWithModel)
             {
@@ -315,12 +308,13 @@ public class CommandParser
                     }
                 }
             }
+            else
+                Console.WriteLine("The database is already up to date.  No action taken.");
         }
+        else if(! string.IsNullOrEmpty(args.Try(1)))
+            throw new ParseException($"Argument {args.Try(1)} is not recognized.");
     }
 
 
-    private void ShowConfig()
-    {
-        Console.WriteLine($"Observer CLI version {Assembly.GetEntryAssembly().GetCustomAttribute<AssemblyInformationalVersionAttribute>().InformationalVersion}");
-    }
+    
 }

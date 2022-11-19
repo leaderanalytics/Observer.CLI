@@ -18,24 +18,19 @@
 		<PackageReference Include="AdaptiveClient" Version="3.0.3" />
 		<PackageReference Include="Autofac" Version="6.3.0" />
 		<PackageReference Include="Autofac.Extensions.DependencyInjection" Version="7.2.0" />
+		<PackageReference Include="LeaderAnalytics.Observer.Fred.Services" Version="1.0.3-beta.3" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="6.0.8">
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
 		<PackageReference Include="Serilog.AspNetCore" Version="6.0.1" />
 		<PackageReference Include="Serilog.Sinks.File" Version="5.0.0" />
-		<PackageReference Include="Spectre.Console" Version="0.45.0" />
 	</ItemGroup>
 
 	<PropertyGroup>
 		<RootNamespace>LeaderAnalytics.Observer.CLI</RootNamespace>
 		<AssemblyName>Obs</AssemblyName>
 	</PropertyGroup>
-
-
-	<ItemGroup>
-	  <ProjectReference Include="..\..\Observer.Fred.Services\Observer.Fred.Services\Observer.Fred.Services.csproj" />
-	</ItemGroup>
 
 	<ItemGroup>
 	  <Compile Update="Resources.Designer.cs">

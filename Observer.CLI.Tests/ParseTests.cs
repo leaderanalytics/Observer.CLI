@@ -9,6 +9,7 @@ public class Tests
     [SetUp]
     public void Setup()
     {
+        Program.CreateLogger();
         IHost host = Program.CreateHostBuilder(null, "development").Build();
         ILifetimeScope scope = host.Services.GetAutofacRoot().BeginLifetimeScope();
         commandParser = scope.Resolve<CommandParser>();

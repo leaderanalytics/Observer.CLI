@@ -5,6 +5,7 @@ obs <data provider name>
 obs --config
 obs --help
 
+=============================================
 The only data provider supported at this time is fred.  Fred supports the following arguments:
 
 obs fred [category] [release] [series] [source]
@@ -21,3 +22,14 @@ obs fred source [[releases] <sourceID>{,<sourceID>}] [<sourceID>{,<sourceID>}]
 
 Vintage dates are always downloaded when observations are downloaded.  There is no API to download vintage dates independently. 
 Observations are updated using the last date stored in the local database.  
+
+=============================================
+obs --config [updatedb]
+
+--config displays version information and confirms the database schema is up to date.
+Use the updatedb argument to create the database or update the schema.
+=============================================
+obs --help
+
+Displays this help text.
+=============================================
