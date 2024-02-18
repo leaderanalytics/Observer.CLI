@@ -1,5 +1,4 @@
-﻿using LeaderAnalytics.Vyntix.Fred.FredClient;
-using Microsoft.Extensions.Configuration;
+﻿using Microsoft.Extensions.Configuration;
 
 namespace LeaderAnalytics.Observer.CLI;
 
@@ -10,7 +9,7 @@ public class Program
 
     public static async Task Main(string[] args)
     {
-        string? env = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
+        string? env = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT" );
         CreateLogger();
 
         try
@@ -28,7 +27,7 @@ public class Program
                 CommandParser parser = scope.Resolve<CommandParser>();
                 await parser.Parse(args);
                 string fredAPI_Key = scope.Resolve<IConfiguration>().GetValue<string>("FredAPI_Key");
-                IAdaptiveClient<IObserverAPI_Manifest> apiClient = scope.Resolve<IAdaptiveClient<IObserverAPI_Manifest>>();
+                IAdaptiveClient<IAPI_Manifest> apiClient = scope.Resolve<IAdaptiveClient<IAPI_Manifest>>();
             }
         }
         catch (Exception ex)
@@ -91,7 +90,7 @@ public class Program
                 throw new Exception("Only one endPoint can be active at a time.  Check the EndPoints section in appsettings.json and make sure IsActive is set to True for one endPoint only.");
 
             containerBuilder.RegisterInstance(endPoints.First(x => x.IsActive)).SingleInstance();
-            containerBuilder.RegisterModule(new LeaderAnalytics.Observer.Fred.Services.AutofacModule());
+            containerBuilder.AddFredDownloaderServices(endPoints);
             RegistrationHelper registrationHelper = new RegistrationHelper(containerBuilder);
             new AdaptiveClientModule(endPoints).Register(registrationHelper);
         });

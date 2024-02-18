@@ -1,10 +1,10 @@
-﻿global using Serilog.Events;
+﻿global using NUnit.Framework;
+global using Serilog.Events;
 global using Serilog;
 global using Autofac;
 global using Autofac.Extensions.DependencyInjection;
 global using Microsoft.Extensions.Hosting;
-global using LeaderAnalytics.Observer.Fred.Services;
-global using LeaderAnalytics.Observer.Fred.Services.Domain;
+global using LeaderAnalytics.Vyntix.Fred.Downloader;
 global using LeaderAnalytics.AdaptiveClient;
 global using System.Text.RegularExpressions;
 global using System.Reflection;

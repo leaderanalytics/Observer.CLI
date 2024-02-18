@@ -6,11 +6,11 @@ namespace LeaderAnalytics.Observer.CLI;
 public class CommandParser
 {
     private const string pattern0 = $"(?i)(^{DataProvider.Fred}$|^{CommandArgument.Config}$|^{CommandArgument.Help}$)";
-    private IAdaptiveClient<IObserverAPI_Manifest> client;
+    private IAdaptiveClient<IAPI_Manifest> client;
     private readonly DbHelper dbHelper;
     private  HashSet<string> fredDataTypes;
 
-    public CommandParser(IAdaptiveClient<IObserverAPI_Manifest> client, DbHelper dbHelper)
+    public CommandParser(IAdaptiveClient<IAPI_Manifest> client, DbHelper dbHelper)
     {
         this.client = client;
         this.dbHelper = dbHelper;
