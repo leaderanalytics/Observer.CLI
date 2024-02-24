@@ -8,17 +8,17 @@ obs --help
 =============================================
 The only data provider supported at this time is fred.  Fred supports the following arguments:
 
-obs fred [category] [release] [series] [source]
+obs fred [<category> | <release> | <series> | <source>]
 
 Each argument supports optional arguments as shown:
 
-obs fred category [[children] | [related] | [series] | [tags]] <cateogryID>{,<categoryID>}
+obs fred category [children | related | series | tags] <cateogryID>[,categoryID..]
 
-obs fred release [[dates] | [series] | [sources] <releaseID>{,<releaseID>] [<releaseID>{,<releaseID>]
+obs fred release [dates | series | sources <releaseID>[,releaseID]] [releaseID[,releaseID...]]
 
-obs fred series [[categories] | [release] | [tags] | [observations]] <seriesID>{,<seriesID>}
+obs fred series [categories | release | tags | observations] <seriesID>[,seriesID...]
 
-obs fred source [[releases] <sourceID>{,<sourceID>}] [<sourceID>{,<sourceID>}]
+obs fred source [releases <sourceID>[,sourceID...]] [sourceID[,sourceID...]]
 
 Vintage dates are always downloaded when observations are downloaded.  There is no API to download vintage dates independently. 
 Observations are updated using the last date stored in the local database.  
