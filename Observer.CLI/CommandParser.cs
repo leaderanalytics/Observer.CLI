@@ -94,22 +94,22 @@ public class CommandParser
             Log.Information("Starting Category download for ID {id}.", id);
 
             if (getCategory)
-                await client.CallAsync(x => x.CategoriesService.DownloadCategory(id));
+                await client.CallAsync(x => x.CategoriesService.DownloadCategory(id, null));
             else
             {
                 switch (args[2].ToLower())
                 {
                     case FredDataArg.Children:
-                        await client.CallAsync(x => x.CategoriesService.DownloadCategoryChildren(id));
+                        await client.CallAsync(x => x.CategoriesService.DownloadCategoryChildren(id, null));
                         break;
                     case FredDataArg.Related:
-                        await client.CallAsync(x => x.CategoriesService.DownloadRelatedCategories(id));
+                        await client.CallAsync(x => x.CategoriesService.DownloadRelatedCategories(id, null));
                         break;
                     case FredDataArg.Series:
-                        await client.CallAsync(x => x.CategoriesService.DownloadCategorySeries(id));
+                        await client.CallAsync(x => x.CategoriesService.DownloadCategorySeries(id, null));
                         break;
                     case FredDataArg.Tags:
-                        await client.CallAsync(x => x.CategoriesService.DownloadCategoryTags(id));
+                        await client.CallAsync(x => x.CategoriesService.DownloadCategoryTags(id, null));
                         break;
                     default:
                         throw new ParseException($"Argument {args[2]} is not recognized.");
@@ -141,9 +141,9 @@ public class CommandParser
             if (!idRequired)
             {
                 if (string.IsNullOrEmpty(id))
-                    await client.CallAsync(x => x.ReleasesService.DownloadAllReleases());
+                    await client.CallAsync(x => x.ReleasesService.DownloadAllReleases(null));
                 else
-                    await client.CallAsync(x => x.ReleasesService.DownloadRelease(id));
+                    await client.CallAsync(x => x.ReleasesService.DownloadRelease(id, null));
             }
             else
             {
@@ -152,16 +152,16 @@ public class CommandParser
                     case FredDataArg.Dates:
 
                         if (string.IsNullOrEmpty(id))
-                            await client.CallAsync(x => x.ReleasesService.DownloadAllReleaseDates());
+                            await client.CallAsync(x => x.ReleasesService.DownloadAllReleaseDates(null));
                         else
-                            await client.CallAsync(x => x.ReleasesService.DownloadReleaseDates(id));
+                            await client.CallAsync(x => x.ReleasesService.DownloadReleaseDates(id, null));
 
                         break;
                     case FredDataArg.Series:
-                        await client.CallAsync(x => x.ReleasesService.DownloadReleaseSeries(id));
+                        await client.CallAsync(x => x.ReleasesService.DownloadReleaseSeries(id, null));
                         break;
                     case FredDataArg.Sources:
-                        await client.CallAsync(x => x.ReleasesService.DownloadReleaseSources(id));
+                        await client.CallAsync(x => x.ReleasesService.DownloadReleaseSources(id, null));
                         break;
                     default:
                         throw new ParseException($"Argument {args[2]} is not recognized.");
@@ -188,22 +188,23 @@ public class CommandParser
             Log.Information("Starting Series download for ID {id}.", id);
 
             if (isID)
-                await client.CallAsync(x => x.SeriesService.DownloadSeries(id));
+                await client.CallAsync(x => x.SeriesService.DownloadSeries(id, null));
             else
             {
                 switch (args[2])
                 {
                     case FredDataArg.Observations:
-                        await client.CallAsync(x => x.ObservationsService.DownloadObservations(id));
+                        await client.CallAsync(x => x.ObservationsService.DownloadObservations(id, null));
                         break;
                     case FredDataArg.Categories:
-                        await client.CallAsync(x => x.SeriesService.DownloadCategoriesForSeries(id));
+                        await client.CallAsync(x => x.CategoriesService.DownloadCategoriesForSeries(id, null));
+                        
                         break;
                     case FredDataArg.Release:
-                        await client.CallAsync(x => x.SeriesService.DownloadSeriesRelease(id));
+                        await client.CallAsync(x => x.SeriesService.DownloadSeriesRelease(id, null));
                         break;
                     case FredDataArg.Tags:
-                        await client.CallAsync(x => x.SeriesService.DownloadSeriesTags(id));
+                        await client.CallAsync(x => x.SeriesService.DownloadSeriesTags(id, null));
                         break;
                     default:
                         throw new ParseException($"Argument {args[2]} is not recognized.");
@@ -226,7 +227,7 @@ public class CommandParser
         if (string.IsNullOrEmpty(idsArg))
         {
             Log.Information("Starting Sources download.");
-            await client.CallAsync(x => x.ReleasesService.DownloadAllSources());
+            await client.CallAsync(x => x.ReleasesService.DownloadAllSources(null));
         }
         else
         {
@@ -238,14 +239,14 @@ public class CommandParser
 
                 if (!isID)
                 {
-                    await client.CallAsync(x => x.ReleasesService.DownloadSource(id));
+                    await client.CallAsync(x => x.ReleasesService.DownloadSource(id, null));
                 }
                 else
                 {
                     switch (args[2].ToLower())
                     {
                         case FredDataArg.Releases:
-                            await client.CallAsync(x => x.ReleasesService.DownloadSourceReleases(id));
+                            await client.CallAsync(x => x.ReleasesService.DownloadSourceReleases(id, null));
                             break;
                         default:
                             throw new ParseException($"Argument {args[2]} is not recognized.");
