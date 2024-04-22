@@ -23,6 +23,8 @@ obs fred source [releases <sourceID>[,sourceID...]] [sourceID[,sourceID...]]
 Vintage dates are always downloaded when observations are downloaded.  There is no API to download vintage dates independently. 
 Observations are updated using the last date stored in the local database.  
 
+obs fred path category <categoryID> 
+
 =============================================
 obs --config [updatedb]
 
