@@ -38,7 +38,7 @@ public class CommandParser
         if (cmd == DataProvider.Fred)
         {
             if ((await dbHelper.VerifyDatabase()) != DatabaseStatus.ConsistentWithModel)
-                throw new Exception("The database does not exist or needs to be updated.  Run obs --config verifydb.");
+                throw new Exception("The database does not exist or needs to be updated.  Run obs --config updatedb.");
 
             await ParseFredCommand(args);
         }
@@ -70,11 +70,153 @@ public class CommandParser
             case FredDataType.Source:
                 await GetSources(args);
                 break;
+            case CommandArgument.Path:
+                await ParsePathCommand(args);
+                break;
             default:
                 ShowHelp();
                 break;
         }
     }
+
+    private async Task ParsePathCommand(string[] args)
+    {
+        switch (args[2]?.ToLower())
+        {
+            case PathTypes.SeriesPath:
+                await ParseSeriesPathCommand(args);
+                break;
+            case PathTypes.CategoryPath:
+                await ParseCategoryPathCommand(args);
+                break;
+            default:
+                ShowHelp();
+                break;
+        }
+    }
+
+    private async Task ParseCategoryPathCommand(string[] args)
+    {
+        int catID;
+        string idsArg = args.Try(3);
+                
+        if (string.IsNullOrEmpty(idsArg))
+            throw new ParseException("A Category ID is required.");
+        else
+            int.TryParse(idsArg, out catID);
+
+        if (catID == 0) 
+            throw new ParseException("Category ID must be a numeric value.");
+
+        FredDownloadArgs fda = new FredDownloadArgs { CategoryID = catID.ToString() };
+
+        for(int i=4; i<args.Length; i++) 
+        {
+            string? arg = args.Try(i);
+
+            switch (arg) 
+            {
+                case PathArgs.Series:
+                    fda.Series = true;
+                    break;
+                case PathArgs.Disc:
+                    fda.IncludeDiscontinuedSeries = true;
+                    break;
+                case PathArgs.ChildCat:
+                    fda.ChildCategories = true;
+                    break;
+                case PathArgs.SeriesTag:
+                    fda.SeriesTags = true;
+                    break;
+                case PathArgs.CatTag:
+                    fda.CategoryTags = true;
+                    break;
+                case PathArgs.RelCat:
+                    fda.RelatedCategories = true;
+                    break;
+                case PathArgs.Rel:
+                    fda.Releases = true;
+                    break;
+                case PathArgs.RelDate:
+                    fda.ReleaseDates = true;
+                    break;
+                case PathArgs.Source:
+                    fda.Sources = true;
+                    break;
+                case PathArgs.Obs:
+                    fda.Observations = true;
+                    break;
+                case PathArgs.Recurse:
+                    fda.Recurse = true;
+                    break;
+                default:
+                    throw new ParseException($"Argument {arg} is unrecognized or invalid for category path.");
+            }
+        }
+        await client.CallAsync(x => x.DownloadService.Download(fda, null));
+        Log.Information("Category path download completed successfully.");
+
+    }
+     
+    private async Task ParseSeriesPathCommand(string[] args)
+    {
+        string[]? symbols = null; 
+        string? idsArg = args.Try(3);
+
+        if (string.IsNullOrEmpty(idsArg))
+            throw new ParseException("One or more series IDs is required.");
+        else
+            symbols = idsArg.Split(',', StringSplitOptions.TrimEntries);
+
+        if(!(symbols?.Any() ?? false))
+            throw new ParseException("One or more series IDs is required.");
+
+        FredDownloadArgs fda = new FredDownloadArgs { Symbols = symbols};
+
+        for (int i = 4; i < args.Length; i++)
+        {
+            string? arg = args.Try(i);
+
+            switch (arg)
+            {
+                case PathArgs.Disc:
+                    fda.IncludeDiscontinuedSeries = true;
+                    break;
+                case PathArgs.SeriesCat:
+                    fda.SeriesCategories = true;
+                    break;
+                case PathArgs.ChildCat:
+                    fda.ChildCategories = true;
+                    break;
+                case PathArgs.SeriesTag:
+                    fda.SeriesTags = true;
+                    break;
+                case PathArgs.CatTag:
+                    fda.CategoryTags = true;
+                    break;
+                case PathArgs.RelCat:
+                    fda.RelatedCategories = true;
+                    break;
+                case PathArgs.Rel:
+                    fda.Releases = true;
+                    break;
+                case PathArgs.RelDate:
+                    fda.ReleaseDates = true;
+                    break;
+                case PathArgs.Source:
+                    fda.Sources = true;
+                    break;
+                case PathArgs.Obs:
+                    fda.Observations = true;
+                    break;
+                default:
+                    throw new ParseException($"Argument {arg} is unrecognized or invalid for series path.");
+            }
+        }
+        await client.CallAsync(x => x.DownloadService.Download(fda, null));
+        Log.Information("Series path download completed successfully.");
+    }
+
 
     private async Task GetCategories(string[] args)
     {

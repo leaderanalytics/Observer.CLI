@@ -11,11 +11,34 @@ public static class CommandArgument
     public const string TagNames = "--tag_names";
     public const string TagGroupID = "--tag_group_id";
     public const string SearchText = "--search_text";
+    public const string Path = "path";
 }
 
 public static class DataProvider
 {
     public const string Fred = "fred";
+}
+
+public static class PathTypes
+{ 
+    public const string CategoryPath = "category";
+    public const string SeriesPath = "series";
+}
+
+public static class PathArgs
+{
+    public const string Series = "series";
+    public const string Disc = "disc";
+    public const string SeriesCat = "seriescat";
+    public const string ChildCat = "childcat";
+    public const string SeriesTag = "seriestag";
+    public const string CatTag = "cattag";
+    public const string RelCat = "relcat";
+    public const string Rel = "rel";
+    public const string RelDate = "reldate";
+    public const string Source = "source";
+    public const string Obs = "obs";
+    public const string Recurse = "recurse";
 }
 
 public static class FredDataType 

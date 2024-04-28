@@ -1,16 +1,73 @@
 ﻿Documentation can be found at https://vyntix.com/docs/.
-The first argument provided to Observer must be the name of a data provider, --config, or --help.  
-Examples:
-obs <data provider name>
-obs --config
-obs --help
+
+Observer.CLI supports two types of syntax:  Path syntax and Elemnt syntax.
+
+Path syntax is the recommended way to download a series or a category along with it's related data.
+For example, using the series path, you can specify one or more series identifiers to download series metadata, observations, categories, etc. for those series.
+Using the category path, you can specify a category identifier and download child categories, series metadata, observations, category tags, etc. for that category.
+
+Use Element syntax to download specific Fred elements.  Element syntax supports some of the same options as Path syntax however it is intended to allow more
+granular control over which data items are downloaded.
 
 =============================================
-The only data provider supported at this time is fred.  Fred supports the following arguments:
+--- Usage ---
+
+Regardless of which syntax is used, the first argument provided to Observer must be the name of a data provider, --config, or --help.  
+
+Examples:
+obs Fred
+obs --config
+obs --help
+The only data provider supported at this time is Fred.
+
+=============================================
+--- Path syntax ---
+
+obs fred path category <categoryID> [SERIES] [DISC] [CHILDCAT] [SERIESTAGS] [CATTAGS] [RELCAT] [REL] [RELDATE] [SOURCE] [OBS] [RECURSE]
+
+obs fred path series <seriesID>[,seriesID...] [DISC] [SERIESCAT] [CHILDCAT] [SERIESTAGS] [CATTAGS] [RELCAT] [REL] [RELDATE] [SOURCE] [OBS] 
+
+
+-- Arguments:
+SERIES			Applies to category path only.  Downloads series metadata for each series in the category.
+DISC			If specified, series marked as discontinued will be downloaded.
+SERIESCAT 		Applies to series path only.
+CHILDCAT 		Downloads child categores of a supplied category ID, or child categories of the category of a supplied series ID.
+SERIESTAG		Downloads series tags for any downloaded series
+CATTAG			Downloads category tags for any downloaded category
+RELCAT			Downloads related categories for any downloaded category	
+REL				Downloads releases for any downloaded series
+RELDATE 		Downloads release dates for any downloaded release
+SOURCE			Downloads source for any downloaded release
+OBS 			Downloads observations for any downloaded series
+RECURSE 		Applies to category path only.  CHILDCAT argument must also be provided. Recurse child categores and download all elements per the supplied arguments.
+
+When specifying multple seriesIDs, seperate each seriesID with a comma and do not embed spaces.
+
+
+Examples:
+
+obs fred path category 130 series childcat obs recurse
+
+The above command will download series metadata and child categores for series and categories that are children of category 130.  Observations for 
+each series will also be downloaded.  Note that if the SERIES argument is not provided than other dependant arguments such as SERIESTAGS and OBS make
+no sense and have no effect.
+
+obs fred path series 
+
+
+Vintage dates are always downloaded when observations are downloaded.  There is no API to download vintage dates independently. 
+Observations are updated using the last date stored in the local database.  
+
+
+=============================================
+--- Element syntax ---
+
+Element syntax requires the the type of data element must be specified after the provider name.  The four shown below are supported:
 
 obs fred [<category> | <release> | <series> | <source>]
 
-Each argument supports optional arguments as shown:
+Each element type argument supports optional arguments as shown:
 
 obs fred category [children | related | series | tags] <cateogryID>[,categoryID..]
 
@@ -20,18 +77,23 @@ obs fred series [categories | release | tags | observations] <seriesID>[,seriesI
 
 obs fred source [releases <sourceID>[,sourceID...]] [sourceID[,sourceID...]]
 
+When specifying multple identifiers, seperate each identifier with a comma and do not embed spaces.
+
 Vintage dates are always downloaded when observations are downloaded.  There is no API to download vintage dates independently. 
 Observations are updated using the last date stored in the local database.  
-
-obs fred path category <categoryID> 
-
 =============================================
+--- Configuration information ---
+
 obs --config [updatedb]
 
 --config displays version information and confirms the database schema is up to date.
 Use the updatedb argument to create the database or update the schema.
 =============================================
+--- Help ---
 obs --help
 
 Displays this help text.
+
 =============================================
+
+https://dotnet.github.io/docfx/index.html
