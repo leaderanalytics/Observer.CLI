@@ -38,7 +38,7 @@ public class CommandParser
         if (cmd == DataProvider.Fred)
         {
             if ((await dbHelper.VerifyDatabase()) != DatabaseStatus.ConsistentWithModel)
-                throw new Exception("The database does not exist or needs to be updated.  Run obs --config verifydb.");
+                throw new Exception("The database does not exist or needs to be updated.  Run obs --config updatedb.");
 
             await ParseFredCommand(args);
         }
@@ -70,11 +70,153 @@ public class CommandParser
             case FredDataType.Source:
                 await GetSources(args);
                 break;
+            case CommandArgument.Path:
+                await ParsePathCommand(args);
+                break;
             default:
                 ShowHelp();
                 break;
         }
     }
+
+    private async Task ParsePathCommand(string[] args)
+    {
+        switch (args[2]?.ToLower())
+        {
+            case PathTypes.SeriesPath:
+                await ParseSeriesPathCommand(args);
+                break;
+            case PathTypes.CategoryPath:
+                await ParseCategoryPathCommand(args);
+                break;
+            default:
+                ShowHelp();
+                break;
+        }
+    }
+
+    private async Task ParseCategoryPathCommand(string[] args)
+    {
+        int catID;
+        string idsArg = args.Try(3);
+                
+        if (string.IsNullOrEmpty(idsArg))
+            throw new ParseException("A Category ID is required.");
+        else
+            int.TryParse(idsArg, out catID);
+
+        if (catID == 0) 
+            throw new ParseException("Category ID must be a numeric value.");
+
+        FredDownloadArgs fda = new FredDownloadArgs { CategoryID = catID.ToString() };
+
+        for(int i=4; i<args.Length; i++) 
+        {
+            string? arg = args.Try(i);
+
+            switch (arg) 
+            {
+                case PathArgs.Series:
+                    fda.Series = true;
+                    break;
+                case PathArgs.Disc:
+                    fda.IncludeDiscontinuedSeries = true;
+                    break;
+                case PathArgs.ChildCat:
+                    fda.ChildCategories = true;
+                    break;
+                case PathArgs.SeriesTag:
+                    fda.SeriesTags = true;
+                    break;
+                case PathArgs.CatTag:
+                    fda.CategoryTags = true;
+                    break;
+                case PathArgs.RelCat:
+                    fda.RelatedCategories = true;
+                    break;
+                case PathArgs.Rel:
+                    fda.Releases = true;
+                    break;
+                case PathArgs.RelDate:
+                    fda.ReleaseDates = true;
+                    break;
+                case PathArgs.Source:
+                    fda.Sources = true;
+                    break;
+                case PathArgs.Obs:
+                    fda.Observations = true;
+                    break;
+                case PathArgs.Recurse:
+                    fda.Recurse = true;
+                    break;
+                default:
+                    throw new ParseException($"Argument {arg} is unrecognized or invalid for category path.");
+            }
+        }
+        await client.CallAsync(x => x.DownloadService.Download(fda, null));
+        Log.Information("Category path download completed successfully.");
+
+    }
+     
+    private async Task ParseSeriesPathCommand(string[] args)
+    {
+        string[]? symbols = null; 
+        string? idsArg = args.Try(3);
+
+        if (string.IsNullOrEmpty(idsArg))
+            throw new ParseException("One or more series IDs is required.");
+        else
+            symbols = idsArg.Split(',', StringSplitOptions.TrimEntries);
+
+        if(!(symbols?.Any() ?? false))
+            throw new ParseException("One or more series IDs is required.");
+
+        FredDownloadArgs fda = new FredDownloadArgs { Symbols = symbols};
+
+        for (int i = 4; i < args.Length; i++)
+        {
+            string? arg = args.Try(i);
+
+            switch (arg)
+            {
+                case PathArgs.Disc:
+                    fda.IncludeDiscontinuedSeries = true;
+                    break;
+                case PathArgs.SeriesCat:
+                    fda.SeriesCategories = true;
+                    break;
+                case PathArgs.ChildCat:
+                    fda.ChildCategories = true;
+                    break;
+                case PathArgs.SeriesTag:
+                    fda.SeriesTags = true;
+                    break;
+                case PathArgs.CatTag:
+                    fda.CategoryTags = true;
+                    break;
+                case PathArgs.RelCat:
+                    fda.RelatedCategories = true;
+                    break;
+                case PathArgs.Rel:
+                    fda.Releases = true;
+                    break;
+                case PathArgs.RelDate:
+                    fda.ReleaseDates = true;
+                    break;
+                case PathArgs.Source:
+                    fda.Sources = true;
+                    break;
+                case PathArgs.Obs:
+                    fda.Observations = true;
+                    break;
+                default:
+                    throw new ParseException($"Argument {arg} is unrecognized or invalid for series path.");
+            }
+        }
+        await client.CallAsync(x => x.DownloadService.Download(fda, null));
+        Log.Information("Series path download completed successfully.");
+    }
+
 
     private async Task GetCategories(string[] args)
     {
@@ -94,22 +236,22 @@ public class CommandParser
             Log.Information("Starting Category download for ID {id}.", id);
 
             if (getCategory)
-                await client.CallAsync(x => x.CategoriesService.DownloadCategory(id));
+                await client.CallAsync(x => x.CategoriesService.DownloadCategory(id, null));
             else
             {
                 switch (args[2].ToLower())
                 {
                     case FredDataArg.Children:
-                        await client.CallAsync(x => x.CategoriesService.DownloadCategoryChildren(id));
+                        await client.CallAsync(x => x.CategoriesService.DownloadCategoryChildren(id, null));
                         break;
                     case FredDataArg.Related:
-                        await client.CallAsync(x => x.CategoriesService.DownloadRelatedCategories(id));
+                        await client.CallAsync(x => x.CategoriesService.DownloadRelatedCategories(id, null));
                         break;
                     case FredDataArg.Series:
-                        await client.CallAsync(x => x.CategoriesService.DownloadCategorySeries(id));
+                        await client.CallAsync(x => x.CategoriesService.DownloadCategorySeries(id, null));
                         break;
                     case FredDataArg.Tags:
-                        await client.CallAsync(x => x.CategoriesService.DownloadCategoryTags(id));
+                        await client.CallAsync(x => x.CategoriesService.DownloadCategoryTags(id, null));
                         break;
                     default:
                         throw new ParseException($"Argument {args[2]} is not recognized.");
@@ -141,9 +283,9 @@ public class CommandParser
             if (!idRequired)
             {
                 if (string.IsNullOrEmpty(id))
-                    await client.CallAsync(x => x.ReleasesService.DownloadAllReleases());
+                    await client.CallAsync(x => x.ReleasesService.DownloadAllReleases(null));
                 else
-                    await client.CallAsync(x => x.ReleasesService.DownloadRelease(id));
+                    await client.CallAsync(x => x.ReleasesService.DownloadRelease(id, null));
             }
             else
             {
@@ -152,16 +294,16 @@ public class CommandParser
                     case FredDataArg.Dates:
 
                         if (string.IsNullOrEmpty(id))
-                            await client.CallAsync(x => x.ReleasesService.DownloadAllReleaseDates());
+                            await client.CallAsync(x => x.ReleasesService.DownloadAllReleaseDates(null));
                         else
-                            await client.CallAsync(x => x.ReleasesService.DownloadReleaseDates(id));
+                            await client.CallAsync(x => x.ReleasesService.DownloadReleaseDates(id, null));
 
                         break;
                     case FredDataArg.Series:
-                        await client.CallAsync(x => x.ReleasesService.DownloadReleaseSeries(id));
+                        await client.CallAsync(x => x.ReleasesService.DownloadReleaseSeries(id, null));
                         break;
                     case FredDataArg.Sources:
-                        await client.CallAsync(x => x.ReleasesService.DownloadReleaseSources(id));
+                        await client.CallAsync(x => x.ReleasesService.DownloadReleaseSources(id, null));
                         break;
                     default:
                         throw new ParseException($"Argument {args[2]} is not recognized.");
@@ -188,22 +330,23 @@ public class CommandParser
             Log.Information("Starting Series download for ID {id}.", id);
 
             if (isID)
-                await client.CallAsync(x => x.SeriesService.DownloadSeries(id));
+                await client.CallAsync(x => x.SeriesService.DownloadSeries(id, null));
             else
             {
                 switch (args[2])
                 {
                     case FredDataArg.Observations:
-                        await client.CallAsync(x => x.ObservationsService.DownloadObservations(id));
+                        await client.CallAsync(x => x.ObservationsService.DownloadObservations(id, null));
                         break;
                     case FredDataArg.Categories:
-                        await client.CallAsync(x => x.SeriesService.DownloadCategoriesForSeries(id));
+                        await client.CallAsync(x => x.CategoriesService.DownloadCategoriesForSeries(id, null));
+                        
                         break;
                     case FredDataArg.Release:
-                        await client.CallAsync(x => x.SeriesService.DownloadSeriesRelease(id));
+                        await client.CallAsync(x => x.SeriesService.DownloadSeriesRelease(id, null));
                         break;
                     case FredDataArg.Tags:
-                        await client.CallAsync(x => x.SeriesService.DownloadSeriesTags(id));
+                        await client.CallAsync(x => x.SeriesService.DownloadSeriesTags(id, null));
                         break;
                     default:
                         throw new ParseException($"Argument {args[2]} is not recognized.");
@@ -226,7 +369,7 @@ public class CommandParser
         if (string.IsNullOrEmpty(idsArg))
         {
             Log.Information("Starting Sources download.");
-            await client.CallAsync(x => x.ReleasesService.DownloadAllSources());
+            await client.CallAsync(x => x.ReleasesService.DownloadAllSources(null));
         }
         else
         {
@@ -238,14 +381,14 @@ public class CommandParser
 
                 if (!isID)
                 {
-                    await client.CallAsync(x => x.ReleasesService.DownloadSource(id));
+                    await client.CallAsync(x => x.ReleasesService.DownloadSource(id, null));
                 }
                 else
                 {
                     switch (args[2].ToLower())
                     {
                         case FredDataArg.Releases:
-                            await client.CallAsync(x => x.ReleasesService.DownloadSourceReleases(id));
+                            await client.CallAsync(x => x.ReleasesService.DownloadSourceReleases(id, null));
                             break;
                         default:
                             throw new ParseException($"Argument {args[2]} is not recognized.");

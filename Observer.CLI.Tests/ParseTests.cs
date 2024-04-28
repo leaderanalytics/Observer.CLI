@@ -133,4 +133,14 @@ public class Tests
         args = new string[] { DataProvider.Fred, FredDataType.Source, FredDataArg.Releases, "1" };
         await commandParser.Parse(args);
     }
+
+    [Test]
+    public async Task PathTests()
+    {
+        string[] args = [DataProvider.Fred, CommandArgument.Path, PathTypes.CategoryPath, "120"];
+        await commandParser.Parse(args);
+
+        args = [DataProvider.Fred, CommandArgument.Path, PathTypes.SeriesPath, "GNPCA,NROU"];
+        await commandParser.Parse(args);
+    }
 }
