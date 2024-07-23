@@ -60,7 +60,7 @@ public class CommandParser
 
     private async Task ParseFredCommand(string[] args)
     {
-        switch (args[1]?.ToLower())
+        switch (args[1])
         {
             case FredDataType.Category:
                 await GetCategories(args);
@@ -78,6 +78,7 @@ public class CommandParser
                 await ParsePathCommand(args);
                 break;
             default:
+                Console.WriteLine($"Argument \"{args[1]}\" is not recognized.");
                 ShowHelp();
                 break;
         }
@@ -85,7 +86,7 @@ public class CommandParser
 
     private async Task ParsePathCommand(string[] args)
     {
-        switch (args[2]?.ToLower())
+        switch (args[2])
         {
             case PathTypes.SeriesPath:
                 await ParseSeriesPathCommand(args);
@@ -243,7 +244,7 @@ public class CommandParser
                 await client.CallAsync(x => x.CategoriesService.DownloadCategory(id, null));
             else
             {
-                switch (args[2].ToLower())
+                switch (args[2])
                 {
                     case FredDataArg.Children:
                         await client.CallAsync(x => x.CategoriesService.DownloadCategoryChildren(id, null));
@@ -389,7 +390,7 @@ public class CommandParser
                 }
                 else
                 {
-                    switch (args[2].ToLower())
+                    switch (args[2])
                     {
                         case FredDataArg.Releases:
                             await client.CallAsync(x => x.ReleasesService.DownloadSourceReleases(id, null));
@@ -405,8 +406,7 @@ public class CommandParser
 
     private void ShowHelp()
     {
-        Console.Clear();
-        //AnsiConsole.Markup($"{File.ReadAllText("help.txt")}");
+        // Do not clear the console - user may need to see an error message.
         Console.Write(File.ReadAllText("help.txt"));
     }
 
@@ -467,7 +467,7 @@ public class CommandParser
         if (args.Length > 2)
             throw new ParseException("Too many arguments.  --update accepts one optional parameter, y, which will install an update if one is found.");
 
-        string? installConfirmed = args.Try(1)?.ToLower();
+        string? installConfirmed = args.Try(1);
 
         if(! string.IsNullOrEmpty(installConfirmed) && installConfirmed != "y")
             throw new ParseException($"Invalid argument: {installConfirmed}.  --update accepts one optional parameter, y, which will install an update if one is found.");

@@ -17,7 +17,7 @@ Regardless of which syntax is used, the first argument provided to Observer must
 Examples:
 obs Fred
 obs --config
-obs --update [y]
+obs --update
 obs --help
 The only data provider supported at this time is Fred.
 
@@ -90,6 +90,11 @@ obs --config [updatedb]
 --config displays version information and confirms the database schema is up to date.
 Use the updatedb argument to create the database or update the schema.
 =============================================
+--- Update Observer.CLI ---
+obs --update [y]
+
+--update will check for an update to Observer.CLI.  If an update is found it will only be installed if the y argument is specfied.
+=============================================
 --- Help ---
 obs --help
 
@@ -97,4 +102,3 @@ Displays this help text.
 
 =============================================
 
-https://dotnet.github.io/docfx/index.html
