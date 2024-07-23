@@ -14,12 +14,13 @@ public class Program
     private const string logRoot = "logs\\log.txt";
     // We never load the config directly from this folder - we copy from this folder to configFilePath if the development config file does not exist there.
     // Observer.Desktop and Observer.CLI share a config
-    
+    public static string exePath {  get; private set; }
 
     public static async Task Main(string[] args)
     {
         LeaderAnalytics.Core.EnvironmentName environmentName = LeaderAnalytics.Core.RuntimeEnvironment.GetEnvironmentName();
         CreateLogger();
+        exePath = AppContext.BaseDirectory;
 
         try
         {

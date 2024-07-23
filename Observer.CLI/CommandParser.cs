@@ -410,7 +410,7 @@ public class CommandParser
     private void ShowHelp()
     {
         // Do not clear the console - user may need to see an error message.
-        Console.Write(File.ReadAllText("help.txt"));
+        Console.Write(File.ReadAllText(Path.Combine(Program.exePath,"help.txt")));
     }
 
     private async Task ParseConfig(string[] args)
