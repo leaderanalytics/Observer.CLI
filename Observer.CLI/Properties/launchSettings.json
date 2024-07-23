@@ -2,7 +2,7 @@
   "profiles": {
     "Observer.CLI - Development": {
       "commandName": "Project",
-      "commandLineArgs": "fred releases",
+      "commandLineArgs": "--update",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "development"
       }

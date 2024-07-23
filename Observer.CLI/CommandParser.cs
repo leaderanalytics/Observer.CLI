@@ -1,7 +1,10 @@
-﻿using LeaderAnalytics.AdaptiveClient.EntityFrameworkCore;
+﻿using Azure.Identity;
+using Azure.Security.KeyVault.Secrets;
+using LeaderAnalytics.AdaptiveClient.EntityFrameworkCore;
 using Serilog.Sinks.SystemConsole.Themes;
 using System.Net.NetworkInformation;
 using Velopack;
+using Velopack.Sources;
 
 namespace LeaderAnalytics.Observer.CLI;
 
@@ -474,7 +477,8 @@ public class CommandParser
 
 
         // Velopack
-        var mgr = new UpdateManager(Program.ProgramUpdateUrl);
+        
+        var mgr = new UpdateManager(new GithubSource(Program.ProgramUpdateUrl, null, false));
 
         // check for new version
         UpdateInfo? newVersion = null;
