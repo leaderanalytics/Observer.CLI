@@ -485,7 +485,7 @@ public class CommandParser
         }
         catch (Exception ex)
         {
-            Log.Information("Check for program update failed.  The exception is: {e}", ex.ToString());
+            Log.Error("Check for program update failed. The update url is {u}.  The exception is: {e}", Program.ProgramUpdateUrl, ex.ToString());
             return;
         }
 
