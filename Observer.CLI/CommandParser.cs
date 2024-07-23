@@ -504,7 +504,7 @@ public class CommandParser
             Log.Information("An update for Observer.CLI is available and is being installed.");
             await mgr.DownloadUpdatesAsync(newVersion);
 
-            // install new version and restart app
+            // install new version and restart app.
             mgr.ApplyUpdatesAndRestart(newVersion);
         }
         else
