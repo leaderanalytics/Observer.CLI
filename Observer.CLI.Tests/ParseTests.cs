@@ -1,3 +1,4 @@
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 
 namespace LeaderAnalytics.Observer.CLI.Tests;
@@ -7,10 +8,11 @@ public class Tests
     private CommandParser commandParser;
 
     [SetUp]
-    public void Setup()
+    public async Task Setup()
     {
         Program.CreateLogger();
-        IHost host = Program.CreateHostBuilder(null, "development").Build();
+        IConfigurationRoot config = await ConfigHelper.BuildConfig(Core.EnvironmentName.development, Program.ConfigFilePath);
+        IHost host = Program.CreateHostBuilder(null, config).Build();
         ILifetimeScope scope = host.Services.GetAutofacRoot().BeginLifetimeScope();
         commandParser = scope.Resolve<CommandParser>();
     }

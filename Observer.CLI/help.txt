@@ -1,6 +1,6 @@
 ﻿Documentation can be found at https://vyntix.com/docs/.
 
-Observer.CLI supports two types of syntax:  Path syntax and Elemnt syntax.
+Observer.CLI supports two types of syntax:  Path syntax and Element syntax.
 
 Path syntax is the recommended way to download a series or a category along with it's related data.
 For example, using the series path, you can specify one or more series identifiers to download series metadata, observations, categories, etc. for those series.
@@ -12,11 +12,12 @@ granular control over which data items are downloaded.
 =============================================
 --- Usage ---
 
-Regardless of which syntax is used, the first argument provided to Observer must be the name of a data provider, --config, or --help.  
+Regardless of which syntax is used, the first argument provided to Observer must be the name of a data provider, --config, --update, or --help.  
 
 Examples:
 obs Fred
 obs --config
+obs --update [y]
 obs --help
 The only data provider supported at this time is Fred.
 
@@ -42,14 +43,14 @@ SOURCE			Downloads source for any downloaded release
 OBS 			Downloads observations for any downloaded series
 RECURSE 		Applies to category path only.  CHILDCAT argument must also be provided. Recurse child categores and download all elements per the supplied arguments.
 
-When specifying multple seriesIDs, seperate each seriesID with a comma and do not embed spaces.
+When specifying multiple seriesIDs, separate each seriesID with a comma and do not embed spaces.
 
 
 Examples:
 
 obs fred path category 130 series childcat obs recurse
 
-The above command will download series metadata and child categores for series and categories that are children of category 130.  Observations for 
+The above command will download series metadata and child categories for series and categories that are children of category 130.  Observations for 
 each series will also be downloaded.  Note that if the SERIES argument is not provided than other dependant arguments such as SERIESTAGS and OBS make
 no sense and have no effect.
 
@@ -63,7 +64,7 @@ Observations are updated using the last date stored in the local database.
 =============================================
 --- Element syntax ---
 
-Element syntax requires the the type of data element must be specified after the provider name.  The four shown below are supported:
+Element syntax requires that the type of data element must be specified after the provider name.  The four shown below are supported:
 
 obs fred [<category> | <release> | <series> | <source>]
 
@@ -77,7 +78,7 @@ obs fred series [categories | release | tags | observations] <seriesID>[,seriesI
 
 obs fred source [releases <sourceID>[,sourceID...]] [sourceID[,sourceID...]]
 
-When specifying multple identifiers, seperate each identifier with a comma and do not embed spaces.
+When specifying multiple identifiers, separate each identifier with a comma and do not embed spaces.
 
 Vintage dates are always downloaded when observations are downloaded.  There is no API to download vintage dates independently. 
 Observations are updated using the last date stored in the local database.  

@@ -1,0 +1,13 @@
+--- Velopack ---
+https://docs.velopack.io/getting-started/csharp
+https://docs.velopack.io/distributing/deploy-cli
+-c in pack command is channel i.e. windows, linux, etc.  Default is win
+> In order for delta's to be generated during the pack command, you need to first download the current latest release. This should be done with the download command:
+Change VS to Release configuration
+Disable LeaderAnalytics feed
+Open command window in .csproj folder
+dotnet publish -c Release --self-contained -r win-x64 -o .\bin\Release\net8\win-x64\publish
+vpk pack -u LeaderAnalytics.Vyntix.Observer.CLI --packTitle "Observer CLI" -v 1.0.2 -p .\bin\Release\net8\win-x64\publish -e Obs.exe -o c:\Shared\Releases\Observer.CLI\Windows\ -i icon.ico -c win
+
+cli - document --update
+desktop - location of config is now Observer

@@ -6,27 +6,30 @@
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
 	</PropertyGroup>
-	
-	<ItemGroup>
-		<Content Include="O:\LeaderAnalytics\Config\Vyntix.Fred.FredClient\appsettings.development.json" Link="appsettings.development.json">
-			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
-		</Content>
-	</ItemGroup>
-	
+
 
 	<ItemGroup>
 		<PackageReference Include="AdaptiveClient" Version="4.0.7" />
 		<PackageReference Include="Autofac" Version="8.0.0" />
 		<PackageReference Include="Autofac.Extensions.DependencyInjection" Version="9.0.0" />
-		<PackageReference Include="LeaderAnalytics.Vyntix.Fred.Downloader" Version="2.0.0" />
+		<PackageReference Include="LeaderAnalytics.Vyntix.Fred.Downloader" Version="2.0.4" />
 		<PackageReference Include="Serilog.AspNetCore" Version="8.0.1" />
-		<PackageReference Include="Serilog.Sinks.File" Version="5.0.0" />
+		<PackageReference Include="Serilog.Sinks.File" Version="6.0.0" />
+		<PackageReference Include="Velopack" Version="0.0.556" />
 	</ItemGroup>
 
 	<PropertyGroup>
 		<RootNamespace>LeaderAnalytics.Observer.CLI</RootNamespace>
 		<AssemblyName>Obs</AssemblyName>
+		<PackageIcon>icon.png</PackageIcon>
+		<ApplicationIcon>icon.ico</ApplicationIcon>
 	</PropertyGroup>
+
+	<ItemGroup>
+	  <Content Include="icon.ico">
+	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  </Content>
+	</ItemGroup>
 
 	<ItemGroup>
 	  <Compile Update="Resources.Designer.cs">
@@ -44,12 +47,16 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <None Update="appsettings.json">
+	  <None Update="appsettings.production.json">
 	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
 	  </None>
 	  <None Update="help.txt">
 	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
 	  </None>
+	</ItemGroup>
+
+	<ItemGroup>
+	  <PackageReference Update="Nerdbank.GitVersioning" Version="3.6.139" />
 	</ItemGroup>
 
 </Project>

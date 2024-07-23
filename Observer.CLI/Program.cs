@@ -1,25 +1,42 @@
 ﻿using Microsoft.Extensions.Configuration;
+using Velopack;
+using Velopack.Windows;
 
 namespace LeaderAnalytics.Observer.CLI;
 
 public class Program
 {
     public const string DocumentationURL = "https://vyntix.com/docs/";
+    public static string ConfigFilePath => Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "LeaderAnalytics", "Vyntix", "Observer.CLI");
+    public const string DevelopmentConfigFileSourceFolder = "O:\\LeaderAnalytics\\Config\\Observer.CLI";
+    public static string ProgramUpdateUrl { get; private set; }
+
     private const string logRoot = "logs\\log.txt";
+    // We never load the config directly from this folder - we copy from this folder to configFilePath if the development config file does not exist there.
+    // Observer.Desktop and Observer.CLI share a config
+    
 
     public static async Task Main(string[] args)
     {
-        string? env = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT" );
+        LeaderAnalytics.Core.EnvironmentName environmentName = LeaderAnalytics.Core.RuntimeEnvironment.GetEnvironmentName();
         CreateLogger();
 
         try
         {
+            VelopackApp.Build()
+                .WithAfterInstallFastCallback(v => new Shortcuts().RemoveShortcutForThisExe(ShortcutLocation.StartMenu))
+                .Run();
             Console.Clear();
             Log.Information("Observer - Program.Main started.");
-            Log.Information("Environment is: {env}", env ?? "Production");
+            Log.Information("Environment is: {env}", environmentName);
             Log.Information("Log files will be written to {logRoot}", logRoot);
             Log.Information($"Documentation for Observer can be found at {DocumentationURL}");
-            IHost host = CreateHostBuilder(args, env).Build();
+            // if we are running in prod copy the config file from the same folder as the .exe, otherwise copy the dev config from a share
+            string sourceFolder = environmentName == Core.EnvironmentName.production ? string.Empty : DevelopmentConfigFileSourceFolder;
+            ConfigHelper.CopyConfigFromSource(environmentName, sourceFolder, ConfigFilePath);
+            IConfigurationRoot config = await ConfigHelper.BuildConfig(environmentName, ConfigFilePath);
+            ProgramUpdateUrl = config["ProgramUpdateURL"];
+            IHost host = CreateHostBuilder(args, config).Build();
             
             
             using (ILifetimeScope scope = host.Services.GetAutofacRoot().BeginLifetimeScope())
@@ -54,14 +71,15 @@ public class Program
                .CreateLogger();
     }
 
-    public static IHostBuilder CreateHostBuilder(string[] args, string env)
+    public static IHostBuilder CreateHostBuilder(string[] args, IConfigurationRoot config)
     {
         HostBuilder builder = new();
 
         builder.ConfigureHostConfiguration(builder =>
         {
-            string fileName = string.IsNullOrEmpty(env) ? "appsettings.json" : $"appsettings.{env}.json";
-            builder.AddJsonFile(fileName, false);
+            
+            
+            builder.AddConfiguration(config);
         })
         .UseServiceProviderFactory(new AutofacServiceProviderFactory())
         .UseSerilog()

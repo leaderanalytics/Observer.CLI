@@ -1,5 +1,7 @@
 ﻿using LeaderAnalytics.AdaptiveClient.EntityFrameworkCore;
 using Serilog.Sinks.SystemConsole.Themes;
+using System.Net.NetworkInformation;
+using Velopack;
 
 namespace LeaderAnalytics.Observer.CLI;
 
@@ -46,6 +48,8 @@ public class CommandParser
             ShowHelp();
         else if (cmd == CommandArgument.Config)
             await ParseConfig(args);
+        else if (cmd == CommandArgument.Update)
+            await CheckForUpdate(args);
         else
         {
             string msg = $"{args[0]} is not a recognized command.  Try obs --help.";
@@ -456,6 +460,52 @@ public class CommandParser
         }
         else if(! string.IsNullOrEmpty(args.Try(1)))
             throw new ParseException($"Argument {args.Try(1)} is not recognized.");
+    }
+
+    private async Task CheckForUpdate(string[] args)
+    {
+        if (args.Length > 2)
+            throw new ParseException("Too many arguments.  --update accepts one optional parameter, y, which will install an update if one is found.");
+
+        string? installConfirmed = args.Try(1)?.ToLower();
+
+        if(! string.IsNullOrEmpty(installConfirmed) && installConfirmed != "y")
+            throw new ParseException($"Invalid argument: {installConfirmed}.  --update accepts one optional parameter, y, which will install an update if one is found.");
+
+
+        // Velopack
+        var mgr = new UpdateManager(Program.ProgramUpdateUrl);
+
+        // check for new version
+        UpdateInfo? newVersion = null;
+
+        try
+        {
+            newVersion = await mgr.CheckForUpdatesAsync();
+        }
+        catch (Exception ex)
+        {
+            Log.Information("Check for program update failed.  The exception is: {e}", ex.ToString());
+            return;
+        }
+
+        if (newVersion == null)
+        {
+            Log.Information("No update was found.  You are running the latest version of Observer.CLI");
+            return; // no update available
+        }
+        // download new version
+        if (! string.IsNullOrEmpty(installConfirmed))
+        {
+            Log.Information("An update for Observer.CLI is available and is being installed.");
+            await mgr.DownloadUpdatesAsync(newVersion);
+
+            // install new version and restart app
+            mgr.ApplyUpdatesAndRestart(newVersion);
+        }
+        else
+            Log.Information("An update for Observer.CLI is available however it will not be installed because the y argument was not passed.  To install the update run \"Obs.exe --update y\".");
+
     }
 
 

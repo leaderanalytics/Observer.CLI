@@ -6,6 +6,7 @@ public static class CommandArgument
     public const string Export = "--export";
     public const string Config = "--config";
     public const string Show = "--show";
+    public const string Update = "--update";
     public const string RealTimeStart = "--realtime_start";
     public const string RealTimeEnd = "--realtime_end";
     public const string TagNames = "--tag_names";

@@ -1,0 +1,107 @@
+# ASP.NET Core (.NET Framework)
+# Build and test ASP.NET Core projects targeting the full .NET Framework.
+# Add steps that publish symbols, save build artifacts, and more:
+# https://docs.microsoft.com/azure/devops/pipelines/languages/dotnet-core
+
+trigger:
+  tags:
+      include:
+        - release/*  
+
+pool:
+  vmImage: 'windows-latest'
+
+variables:
+  solution: '**/*.sln'
+  project: 'Observer.CLI/Observer.CLI.csproj'
+  buildPlatform: 'Any CPU'
+  buildConfiguration: 'Release'
+  repoUrl: 'https://github.com/leaderanalytics/Observer.CLI'
+  semVer: ''
+
+steps:
+
+# nbgv need a deep clone
+
+- checkout: self
+  fetchDepth: 0
+
+# install nbgv tooling
+
+- task: DotNetCoreCLI@2  
+  displayName: Install NBGV tool
+  inputs:
+    command: custom
+    custom: tool
+    arguments: install --tool-path . nbgv
+
+- script: nbgv cloud -c 
+  displayName: nbgv cloud set version
+
+# allow nbgv to set the version
+
+
+- bash: |
+    echo Build.SourceBranch is  $(Build.SourceBranch)    
+    echo Build.BuildNumber is $(Build.BuildNumber)
+  displayName: 'Print Tag and BuildNumber'
+
+
+- task: UseDotNet@2
+  displayName: 'Use dotnet 8'
+  inputs:
+    version: '8.x'
+
+- task: NuGetToolInstaller@1
+
+- task: NuGetCommand@2
+  inputs:
+    restoreSolution: '$(solution)'
+    vstsFeed: 'LeaderAnalyticsFeed'
+
+- task: DotNetCoreCLI@2
+  displayName: 'dotnet build'
+  inputs:
+    command: 'build'
+    arguments: '--configuration $(buildConfiguration)'
+    projects: $(project)
+
+- task: DotNetCoreCLI@2
+  displayName: "dotnet publish"
+  inputs:
+    command: publish
+    publishWebProjects: false
+    projects: $(project)
+    arguments: -c Release -r win-x64 --self-contained true --output $(Build.ArtifactStagingDirectory)\publish
+    zipAfterPublish: false
+
+- task: AzureKeyVault@1
+  name: KeyVaultSecrets
+  displayName: Get github api key from Key Vault
+  inputs:
+    azureSubscription: 'All Azure Services'
+    KeyVaultName: 'LeaderAnalyticsVault'
+    SecretsFilter: 'github-token'
+
+- powershell: Write-Host "##vso[build.updatebuildnumber]$(GitBuildVersion)"
+  displayName: 'Update build number to GitBuildVersion'
+  
+- powershell: |
+    $tmp = '$(GitBuildVersion)'.Substring(0, '$(GitBuildVersion)'.LastIndexof('.'))
+    Write-Host "##vso[task.setvariable variable=semVer;]$tmp"
+  displayName: Trim build off GitBuildVersion
+  
+
+- bash: |
+    echo Build.SourceBranch is $(Build.SourceBranch)    
+    echo semVer is $(semVer)
+  displayName: 'Print Tag and BuildNumber'
+
+- script: |
+    dotnet tool install -g vpk
+    vpk download github --repoUrl $(repoUrl)
+    vpk pack -u LeaderAnalytics.Vyntix.Observer.CLI --packTitle "Observer CLI" -v $(semVer) -p $(Build.ArtifactStagingDirectory)\publish\Observer.CLI -e Obs.exe -c win
+    vpk upload github --repoUrl $(repoUrl) --publish --releaseName "Observer CLI for Windows $(semVer)" --tag windows/$(Build.BuildNumber) --token $(github-token) 
+
+
+

@@ -5,6 +5,8 @@ global using Autofac.Extensions.DependencyInjection;
 global using Microsoft.Extensions.Hosting;
 global using LeaderAnalytics.Vyntix.Fred.Downloader;
 global using LeaderAnalytics.AdaptiveClient;
+global using Microsoft.Extensions.Configuration;
 global using System.Reflection;
 global using LeaderAnalytics.Vyntix.Fred.Domain.Downloader;
 global using LeaderAnalytics.Vyntix.Fred.FredClient;
+global using LeaderAnalytics.Core;
