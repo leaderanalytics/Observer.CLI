@@ -41,7 +41,7 @@ REL				Downloads releases for any downloaded series
 RELDATE 		Downloads release dates for any downloaded release
 SOURCE			Downloads source for any downloaded release
 OBS 			Downloads observations for any downloaded series
-RECURSE 		Applies to category path only.  CHILDCAT argument must also be provided. Recurse child categores and download all elements per the supplied arguments.
+RECURSE 		Applies to category path only.  CHILDCAT argument must also be provided. Recurse child categories and download all elements per the supplied arguments.
 
 When specifying multiple seriesIDs, separate each seriesID with a comma and do not embed spaces.
 
@@ -93,7 +93,7 @@ Use the updatedb argument to create the database or update the schema.
 --- Update Observer.CLI ---
 obs --update [y]
 
---update will check for an update to Observer.CLI.  If an update is found it will only be installed if the y argument is specfied.
+--update will check for an update to Observer.CLI.  If an update is found it will only be installed if the y argument is specified.
 =============================================
 --- Help ---
 obs --help
