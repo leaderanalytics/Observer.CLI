@@ -47,13 +47,6 @@ steps:
   displayName: 'Print Tag and BuildNumber'
 
 
-- task: UseDotNet@2
-  displayName: 'Use dotnet 8'
-  inputs:
-    version: '8.x'
-
-- task: NuGetToolInstaller@1
-
 - task: NuGetCommand@2
   inputs:
     restoreSolution: '$(solution)'
@@ -75,7 +68,7 @@ steps:
     arguments: -c Release -r win-x64 --self-contained true --output $(Build.ArtifactStagingDirectory)\publish
     zipAfterPublish: false
 
-- task: AzureKeyVault@1
+- task: AzureKeyVault@2
   name: KeyVaultSecrets
   displayName: Get github api key from Key Vault
   inputs:

@@ -1,4 +1,8 @@
 --- Velopack ---
+
+Binaries are published to github via the Azure pipeline.  There is no need to manually run any velopack script to publish to github.
+
+
 https://docs.velopack.io/getting-started/csharp
 https://docs.velopack.io/distributing/deploy-cli
 -c in pack command is channel i.e. windows, linux, etc.  Default is win

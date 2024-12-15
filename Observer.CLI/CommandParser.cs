@@ -1,8 +1,4 @@
-﻿using Azure.Identity;
-using Azure.Security.KeyVault.Secrets;
-using LeaderAnalytics.AdaptiveClient.EntityFrameworkCore;
-using Serilog.Sinks.SystemConsole.Themes;
-using System.Net.NetworkInformation;
+﻿using LeaderAnalytics.AdaptiveClient.EntityFrameworkCore;
 using Velopack;
 using Velopack.Sources;
 
