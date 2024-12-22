@@ -9,10 +9,10 @@
 
 
 	<ItemGroup>
-		<PackageReference Include="AdaptiveClient" Version="4.0.7" />
-		<PackageReference Include="Autofac" Version="8.1.1" />
+		<PackageReference Include="Autofac" Version="8.2.0" />
 		<PackageReference Include="Autofac.Extensions.DependencyInjection" Version="10.0.0" />
-		<PackageReference Include="LeaderAnalytics.Vyntix.Fred.Downloader" Version="3.0.1" />
+		<PackageReference Include="LeaderAnalytics.AdaptiveClient" Version="5.0.1" />
+		<PackageReference Include="LeaderAnalytics.Vyntix.Fred.Downloader" Version="3.0.3" />
 		<PackageReference Include="Serilog.AspNetCore" Version="9.0.0" />
 		<PackageReference Include="Serilog.Sinks.File" Version="6.0.0" />
 		<PackageReference Include="Velopack" Version="0.0.942" />

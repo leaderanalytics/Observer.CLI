@@ -109,9 +109,10 @@ public class Program
                 throw new Exception("Only one endPoint can be active at a time.  Check the EndPoints section in appsettings.json and make sure IsActive is set to True for one endPoint only.");
 
             containerBuilder.RegisterInstance(endPoints.First(x => x.IsActive)).SingleInstance();
-            containerBuilder.AddFredDownloaderServices(endPoints);
             RegistrationHelper registrationHelper = new RegistrationHelper(containerBuilder);
-            new AdaptiveClientModule(endPoints).Register(registrationHelper);
+            registrationHelper.RegisterEndPoints(endPoints);
+            registrationHelper.AddFredDownloaderServices();
+            new AdaptiveClientModule().Register(registrationHelper);
         });
         return builder;
     }
